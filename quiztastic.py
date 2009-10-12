@@ -2,6 +2,7 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
+from google.appengine.ext.webapp.util import login_required
 
 import yaml
 
@@ -50,6 +51,7 @@ class ProfileUser(webapp.RequestHandler):
 
         self.response.out.write('<html><body><p>User: ' + user_name + '</p></body></html>')
 
+
 class TextQuizList(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
@@ -57,58 +59,50 @@ class TextQuizList(webapp.RequestHandler):
         basic_quizzes = db.GqlQuery("SELECT * FROM BasicQuiz ORDER BY date") # DESC LIMIT 999")
 
         for b_quiz in basic_quizzes:
-            self.response.out.write(b_quiz.title ) 
+            self.response.out.write(b_quiz.title + '\n') 
 
-class MainPage(webapp.RequestHandler):
+class CreateQuizPost(webapp.RequestHandler):
+    def post(self):
+        b_quiz = BasicQuiz()
+
+        b_quiz.author = users.get_current_user()
+        
+        b_quiz.title = self.request.get('title')
+        b_quiz.category = self.request.get('category')
+        
+        b_quiz.put()
+        
+        self.redirect('/')
+
+class CreateQuiz(webapp.RequestHandler):
+    @login_required
     def get(self):
         user = users.get_current_user()
         
-        if user:
-            quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY date DESC LIMIT 20")
-        
-            self.response.out.write('<ul class="quizzes">')
-
-            for quiz in quizzes:
-                self.response.out.write('<li class="quiz">')
-                self.response.out.write('Author: ' + quiz.author.nickname() + ', Quiz Name: ' + quiz.quiz_name ) 
-                self.response.out.write('</li>')
-
-
-            self.response.out.write('</ul>')
-            self.response.out.write('<html><body>')
-            self.response.out.write('<p>Hello, ' + user.nickname() + '</p>')
-            # Write the quiz creation form
-            self.response.out.write("""
-                    <form action="/create_quiz" method="post">
-                        <p class="prompt">Quiz Name:</p>
-                        <input type="text" name="quiz_name" />
-                            <input type="submit" value="Create Quiz" />
-                        </form>
-                    </body>
-                </html>
-            """)
-        else:
-            self.redirect(users.create_login_url(self.request.uri))
-    
-class CreateQuiz(webapp.RequestHandler):
-    def post(self):
-        quiz = Quiz()
-
-        if users.get_current_user():
-            quiz.author = users.get_current_user()
-        else:
-            self.redirect('/')
-        
-        quiz.quiz_name = self.request.get('quiz_name')
-        quiz.put()
-        self.redirect('/')
+        self.response.out.write('<html><body>')
+        self.response.out.write('<p>Hello, ' + user.nickname() + '</p>')
+        # Write the quiz creation form
+        self.response.out.write("""
+                <form action="/post/create_quiz" method="post">
+                    <p class="prompt">Title:</p>
+                    <input type="text" name="title" />
+                    <br />
+                    <p class="prompt">Category:</p>
+                    <input type="text" name="category" />
+                    <br />
+                    <input type="submit" value="Create Quiz" />
+                </form>
+            </body>
+        </html>
+        """)
 
 application = webapp.WSGIApplication( 
                                     [
                                         ('/', HomePage), 
-                                        ('/create_quiz', CreateQuiz), 
+                                        ('/create_quiz', CreateQuiz),
                                         ('/profile/quiz/[^\/]+', ProfileQuiz),
                                         ('/profile/user/[^\/]+', ProfileUser),
+                                        ('/post/create_quiz', CreateQuizPost),
                                         ('/txt/quiz_list', TextQuizList),
                                     ],
                                     debug=True

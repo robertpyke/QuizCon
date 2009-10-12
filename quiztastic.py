@@ -24,13 +24,19 @@ class HomePage(webapp.RequestHandler):
         user = users.get_current_user()
         self.response.out.write('<html><head><title>' + const['home_title'] + '</title></head>')
         self.response.out.write('<body>')
+
         if user:
-            self.response.out.write('<h3>Welcome ' + user + '</h3>')
+            self.response.out.write('<h3>Welcome ' + user.nickname() + '</h3>')
+            self.response.out.write('<p><a href="' + users.create_logout_url(self.request.uri) + '">Logout</a></p>')   
         else:
             self.response.out.write('<h3>Welcome</h3>')
-            self.response.out.write('<p><a href="/login">Login</a></p>')
+            self.response.out.write('<p><a href="' + users.create_login_url(self.request.uri) + '">Login</a></p>')
 
         self.response.out.write('</body></html>')
+
+class Login(webapp.RequestHandler):
+    def get(self):
+            self.redirect(users.create_login_url(self.request.application_url))
 
 class MainPage(webapp.RequestHandler):
     def get(self):
@@ -77,7 +83,7 @@ class CreateQuiz(webapp.RequestHandler):
         self.redirect('/')
 
 application = webapp.WSGIApplication( 
-                                        [('/', HomePage), ('/create_quiz', CreateQuiz)],
+                                        [('/', HomePage), ('/create_quiz', CreateQuiz), ('/login', Login)],
                                         debug=True
                                     )
 

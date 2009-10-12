@@ -21,10 +21,10 @@ class BasicQuiz(db.Model):
     
 class HomePage(webapp.RequestHandler):
     def get(self):
-        user = users.get_current_user()
         self.response.out.write('<html><head><title>' + const['home_title'] + '</title></head>')
         self.response.out.write('<body>')
 
+        user = users.get_current_user()
         if user:
             self.response.out.write('<h3>Welcome ' + user.nickname() + '</h3>')
             self.response.out.write('<p><a href="' + users.create_logout_url(self.request.uri) + '">Logout</a></p>')   
@@ -40,7 +40,15 @@ class ProfileQuiz(webapp.RequestHandler):
         while self.request.path_info_peek() != None:
             quiz_name = self.request.path_info_pop()
 
-        self.response.out.write('<html><body><p>Quiz Name: ' + quiz_name + '</p></body></html>')    
+        self.response.out.write('<html><body><p>Quiz: ' + quiz_name + '</p></body></html>')    
+
+class ProfileUser(webapp.RequestHandler):
+    def get(self):
+        user_name = None
+        while self.request.path_info_peek() != None:
+            user_name = self.request.path_info_pop()
+
+        self.response.out.write('<htlm><body><p>User: ' + user_name + '</p></body></html>')
 
 class MainPage(webapp.RequestHandler):
     def get(self):
@@ -90,7 +98,8 @@ application = webapp.WSGIApplication(
                                     [
                                         ('/', HomePage), 
                                         ('/create_quiz', CreateQuiz), 
-                                        ('/profile/quiz/[^\/]+', ProfileQuiz)
+                                        ('/profile/quiz/[^\/]+', ProfileQuiz),
+                                        ('/profile/user/[^\/]+', ProfileUser)
                                     ],
                                     debug=True
                                 )

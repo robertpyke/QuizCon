@@ -1,0 +1,11 @@
+td {
+    padding: 0.3em;
+}
+
+table.form {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    background-color: #33aa88;
+    border: 3px solid #000;
+    -moz-border-radius: 7px;
+}

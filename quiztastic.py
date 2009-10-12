@@ -14,8 +14,8 @@ f.close()
 class BasicQuiz(db.Model):
     author = db.UserProperty()
 
-    quiz_title = db.StringProperty()
-    quiz_category = db.StringProperty()
+    title = db.StringProperty()
+    category = db.StringProperty()
 
     date = db.DateTimeProperty(auto_now_add=True)
     
@@ -48,7 +48,16 @@ class ProfileUser(webapp.RequestHandler):
         while self.request.path_info_peek() != None:
             user_name = self.request.path_info_pop()
 
-        self.response.out.write('<htlm><body><p>User: ' + user_name + '</p></body></html>')
+        self.response.out.write('<html><body><p>User: ' + user_name + '</p></body></html>')
+
+class TextQuizList(webapp.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/plain'
+        # TODO Fix magic number
+        basic_quizzes = db.GqlQuery("SELECT * FROM BasicQuiz ORDER BY date") # DESC LIMIT 999")
+
+        for b_quiz in basic_quizzes:
+            self.response.out.write(b_quiz.title ) 
 
 class MainPage(webapp.RequestHandler):
     def get(self):
@@ -99,7 +108,8 @@ application = webapp.WSGIApplication(
                                         ('/', HomePage), 
                                         ('/create_quiz', CreateQuiz), 
                                         ('/profile/quiz/[^\/]+', ProfileQuiz),
-                                        ('/profile/user/[^\/]+', ProfileUser)
+                                        ('/profile/user/[^\/]+', ProfileUser),
+                                        ('/txt/quiz_list', TextQuizList),
                                     ],
                                     debug=True
                                 )

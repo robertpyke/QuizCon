@@ -20,7 +20,11 @@ GETS:
 
 /login
     Handle login redirect
-    
+
+# txt gets (API)
+/txt/quiz_list
+    Print the list of available quizzes
+
 POST:
 /post/create_quiz
     Store the newly created quiz in the database

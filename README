@@ -9,15 +9,18 @@ GETS:
 /create_quiz
     Display a form to add a quiz
 
-/take/[quiz_name]/
+/take/[quiz_name]
     Do a quiz
 
 /profile/quiz/[quiz_name]
     Show the stats for a quiz
 
-/profile/user/[user]/
+/profile/user/[user]
     Show the stats for the user
 
+/login
+    Handle login redirect
+    
 POST:
 /post/create_quiz
     Store the newly created quiz in the database

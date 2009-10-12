@@ -3,16 +3,39 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
-class Quiz(db.Model):
+import yaml
+
+# Author: Robert Pyke
+
+f = open('constants.yaml')
+const = yaml.load(f)
+f.close()
+
+class BasicQuiz(db.Model):
     author = db.UserProperty()
-    quiz_name = db.StringProperty(multiline=False)
+
+    quiz_title = db.StringProperty()
+    quiz_category = db.StringProperty()
+
     date = db.DateTimeProperty(auto_now_add=True)
+    
+class HomePage(webapp.RequestHandler):
+    def get(self):
+        user = users.get_current_user()
+        self.response.out.write('<html><head><title>' + const['home_title'] + '</title></head>')
+        self.response.out.write('<body>')
+        if user:
+            self.response.out.write('<h3>Welcome ' + user + '</h3>')
+        else:
+            self.response.out.write('<h3>Welcome</h3>')
+            self.response.out.write('<p><a href="/login">Login</a></p>')
+
+        self.response.out.write('</body></html>')
 
 class MainPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
-
-
+        
         if user:
             quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY date DESC LIMIT 20")
         
@@ -54,7 +77,7 @@ class CreateQuiz(webapp.RequestHandler):
         self.redirect('/')
 
 application = webapp.WSGIApplication( 
-                                        [('/', MainPage), ('/create_quiz', CreateQuiz)],
+                                        [('/', HomePage), ('/create_quiz', CreateQuiz)],
                                         debug=True
                                     )
 

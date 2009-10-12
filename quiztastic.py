@@ -84,19 +84,46 @@ class CreateQuiz(webapp.RequestHandler):
     @login_required
     def get(self):
         user = users.get_current_user()
-        
-        self.response.out.write('<html><body>')
+       
+
+        self.response.out.write("""
+            <html><head>
+            <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+            </head><body>
+        """)
         self.response.out.write('<p>Hello, ' + user.nickname() + '</p>')
         # Write the quiz creation form
+        # TODO Make the select use the const vales...
         self.response.out.write("""
                 <form action="/post/create_quiz" method="post">
-                    <p class="prompt">Title:</p>
-                    <input type="text" name="title" />
-                    <br />
-                    <p class="prompt">Category:</p>
-                    <input type="text" name="category" />
-                    <br />
-                    <input type="submit" value="Create Quiz" />
+                    <table class="form">
+                        <tr>
+                            <td>
+                                <p class="prompt">Title:</p>
+                            </td>
+                            <td>
+                                <input type="text" name="title" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="prompt">Category:</p>
+                            </td>
+                            <td>
+                                <select>
+                                    <option value="history">History</option>
+                                    <option value="maths">Mathematics</option>
+                                    <option value="media">Media (Music, TV, etc.)</option>
+                                    <option value="sci_tech">Science/Tech</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input type="submit" value="Create Quiz" />
+                            </td>
+                        </tr>
+                    </table>
                 </form>
             </body>
         </html>

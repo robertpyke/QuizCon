@@ -34,9 +34,13 @@ class HomePage(webapp.RequestHandler):
 
         self.response.out.write('</body></html>')
 
-class Login(webapp.RequestHandler):
+class ProfileQuiz(webapp.RequestHandler):
     def get(self):
-            self.redirect(users.create_login_url(self.request.application_url))
+        quiz_name = None
+        while self.request.path_info_peek() != None:
+            quiz_name = self.request.path_info_pop()
+
+        self.response.out.write('<html><body><p>Quiz Name: ' + quiz_name + '</p></body></html>')    
 
 class MainPage(webapp.RequestHandler):
     def get(self):
@@ -83,9 +87,13 @@ class CreateQuiz(webapp.RequestHandler):
         self.redirect('/')
 
 application = webapp.WSGIApplication( 
-                                        [('/', HomePage), ('/create_quiz', CreateQuiz), ('/login', Login)],
-                                        debug=True
-                                    )
+                                    [
+                                        ('/', HomePage), 
+                                        ('/create_quiz', CreateQuiz), 
+                                        ('/profile/quiz/[^\/]+', ProfileQuiz)
+                                    ],
+                                    debug=True
+                                )
 
 def main():
     run_wsgi_app(application)

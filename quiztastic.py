@@ -33,6 +33,12 @@ class HomePage(webapp.RequestHandler):
             self.response.out.write('<h3>Welcome</h3>')
             self.response.out.write('<p><a href="' + users.create_login_url(self.request.uri) + '">Login</a></p>')
 
+        self.response.out.write('<ul class="links">')
+        self.response.out.write("""
+            <li><a href="/create_quiz">Create Quiz</a></li>
+            </ul>
+        """)
+        self.response.out.write('</p>')
         self.response.out.write('</body></html>')
 
 class ProfileQuiz(webapp.RequestHandler):

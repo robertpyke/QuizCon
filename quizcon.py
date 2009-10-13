@@ -37,10 +37,16 @@ class HomePage(webapp.RequestHandler):
         self.response.out.write("""
             <li><a href="/create_quiz">Create Quiz</a></li>
             <li><a href="/txt/quiz_list">List of stored quizzes (txt)</a></li>
-            </ul>
         """)
-        self.response.out.write('</p>')
-        self.response.out.write('</body></html>')
+           
+        if user: self.response.out.write('<li><a href="/profile/user/' + user.nickname() + '">My Quizzes</a></li>')
+
+        self.response.out.write("""
+                        </ul>
+                    </p>
+                </body>
+            </html>
+        """)
 
 class ProfileQuiz(webapp.RequestHandler):
     def get(self):
@@ -52,11 +58,36 @@ class ProfileQuiz(webapp.RequestHandler):
 
 class ProfileUser(webapp.RequestHandler):
     def get(self):
-        user_name = None
+        target_user_name = None
         while self.request.path_info_peek() != None:
-            user_name = self.request.path_info_pop()
+            target_user_name = self.request.path_info_pop()
 
-        self.response.out.write('<html><body><p>User: ' + user_name + '</p></body></html>')
+        user = users.get_current_user()
+        if user == None or user.nickname() != target_user_name:
+            self.response.out.write('<html><body><p>User: ' + target_user_name + '</p></body></html>')
+        else:
+            users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
+            self.response.out.write("""
+                <html>
+                    <head<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" /></head>
+                    <body>
+            """)
+            self.response.out.write('<h3>User: ' + user.nickname() + '</h3>')
+
+            self.response.out.write('<h4>My Quizzes</h4>')
+            self.response.out.write('<div class="my_quizzes">')
+            
+            for quiz in users_quizzes:
+                self.response.out.write('<ul class="quiz"><div>')
+                self.response.out.write('<li>Title: ' + quiz.title + '</li>')
+                self.response.out.write('<li>Category: ' + quiz.category + '</li>')
+                self.response.out.write('</ul>')
+            
+            self.response.out.write('</div>')
+            
+            self.response.out.write('</body></html>')
+            
+
 
 
 class TextQuizList(webapp.RequestHandler):

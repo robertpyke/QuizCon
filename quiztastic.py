@@ -66,7 +66,12 @@ class TextQuizList(webapp.RequestHandler):
         basic_quizzes = db.GqlQuery("SELECT * FROM BasicQuiz ORDER BY date") # DESC LIMIT 999")
 
         for b_quiz in basic_quizzes:
-            self.response.out.write(b_quiz.title + '\n') 
+            self.response.out.write(b_quiz.title + ':\n') 
+            self.response.out.write(
+                '\tcreation_date: ' + str(b_quiz.date) + '\n'
+            ) 
+#            self.response.out.write('\tauthor: ' + b_quiz.author.nickname() + '\n'
+            self.response.out.write('\tcategory: ' + b_quiz.category + '\n')
 
 class CreateQuizPost(webapp.RequestHandler):
     def post(self):
@@ -111,7 +116,7 @@ class CreateQuiz(webapp.RequestHandler):
                                 <p class="prompt">Category:</p>
                             </td>
                             <td>
-                                <select>
+                                <select name="category">
                                     <option value="history">History</option>
                                     <option value="maths">Mathematics</option>
                                     <option value="media">Media (Music, TV, etc.)</option>

@@ -36,6 +36,7 @@ class HomePage(webapp.RequestHandler):
         self.response.out.write('<ul class="links">')
         self.response.out.write("""
             <li><a href="/create_quiz">Create Quiz</a></li>
+            <li><a href="/txt/quiz_list">List of stored quizzes (txt)</a></li>
             </ul>
         """)
         self.response.out.write('</p>')

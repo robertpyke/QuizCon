@@ -6,26 +6,29 @@ GETS:
 /
     Display a home page
 
-/create_quiz
+/quiz/create_quiz
     Display a form to add a quiz
 
-/take/[quiz_name]
+/quiz/take/[quiz_name]
     Do a quiz
 
-/profile/quiz/[quiz_name]
+/quiz/profile/[quiz_name]
     Show the stats for a quiz
 
-/profile/user/[user]
+/user/profile/[user]
     Show the stats for the user
+
+/quiz/modify/[quiz_name]
+    Allows the author of a quiz to add questions, remove questions, etc.
 
 /login
     Handle login redirect
 
 # txt gets (API)
-/txt/quiz_list
+/txt/quiz/quiz_list
     Print the list of available quizzes
 
 POST:
-/post/create_quiz
+/post/quiz/create_quiz
     Store the newly created quiz in the database
 

@@ -17,8 +17,17 @@ class BasicQuiz(db.Model):
 
     title = db.StringProperty()
     category = db.StringProperty()
+    questions = db.ListProperty(db.Key)
 
     date = db.DateTimeProperty(auto_now_add=True)
+
+    def print_me (self):
+        return_string = '<ul><li>Title: ' + self.title + '</li>' + '<li>Category: ' + self.category + '</li></ul>'
+        return return_string
+
+class Question(db.Model):
+    prompt = db.StringProperty()
+    answer = db.StringProperty()
     
 class HomePage(webapp.RequestHandler):
     def get(self):
@@ -35,11 +44,11 @@ class HomePage(webapp.RequestHandler):
 
         self.response.out.write('<ul class="links">')
         self.response.out.write("""
-            <li><a href="/create_quiz">Create Quiz</a></li>
-            <li><a href="/txt/quiz_list">List of stored quizzes (txt)</a></li>
+            <li><a href="/quiz/create_quiz">Create Quiz</a></li>
+            <li><a href="/txt/quiz/quiz_list">List of stored quizzes (txt)</a></li>
         """)
            
-        if user: self.response.out.write('<li><a href="/profile/user/' + user.nickname() + '">My Quizzes</a></li>')
+        if user: self.response.out.write('<li><a href="/user/profile/' + user.nickname() + '">My Quizzes</a></li>')
 
         self.response.out.write("""
                         </ul>
@@ -55,6 +64,29 @@ class ProfileQuiz(webapp.RequestHandler):
             quiz_name = self.request.path_info_pop()
 
         self.response.out.write('<html><body><p>Quiz: ' + quiz_name + '</p></body></html>')    
+
+class ModifyQuiz(webapp.RequestHandler):
+    @login_required
+    def get(self):
+        quiz_key = None
+        while self.request.path_info_peek() != None:
+            quiz_key = self.request.path_info_pop()
+
+        user = users.get_current_user()
+
+        quiz = None
+        try:
+            quiz = BasicQuiz.get(quiz_key)
+        except:
+            self.response.out.write('<html><body><p>Bad Quiz Key.. No such quiz!</p></body></html>')
+            return
+        
+        if user != quiz.author:
+            self.response.out.write("<html><body><p>You don't have permission to edit that quiz</p></body></html>")
+        else:
+            self.response.out.write('<html><body><p>Quiz_Key: ' + quiz_key + '</p>')    
+            self.response.out.write('<p>' + quiz.print_me() + '</p></body></html>')
+
 
 class ProfileUser(webapp.RequestHandler):
     def get(self):
@@ -78,10 +110,13 @@ class ProfileUser(webapp.RequestHandler):
             self.response.out.write('<div class="my_quizzes">')
             
             for quiz in users_quizzes:
-                self.response.out.write('<ul class="quiz"><div>')
-                self.response.out.write('<li>Title: ' + quiz.title + '</li>')
+                self.response.out.write('<div class="quiz">')
+                self.response.out.write('<h4><strong>' + quiz.title + '</strong></h4>')
+                self.response.out.write('<ul>')
                 self.response.out.write('<li>Category: ' + quiz.category + '</li>')
                 self.response.out.write('</ul>')
+                self.response.out.write('<p><a href="/quiz/modify/' + str(quiz.key()) + '">Modify?</a></p>')
+                self.response.out.write('</div>')
             
             self.response.out.write('</div>')
             
@@ -115,7 +150,7 @@ class CreateQuizPost(webapp.RequestHandler):
         
         b_quiz.put()
         
-        self.redirect('/')
+        self.redirect('/quiz/modify/' + str(b_quiz.key()))
 
 class CreateQuiz(webapp.RequestHandler):
     @login_required
@@ -132,7 +167,7 @@ class CreateQuiz(webapp.RequestHandler):
         # Write the quiz creation form
         # TODO Make the select use the const vales...
         self.response.out.write("""
-                <form action="/post/create_quiz" method="post">
+                <form action="/post/quiz/create_quiz" method="post">
                     <table class="form">
                         <tr>
                             <td>
@@ -169,11 +204,12 @@ class CreateQuiz(webapp.RequestHandler):
 application = webapp.WSGIApplication( 
                                     [
                                         ('/', HomePage), 
-                                        ('/create_quiz', CreateQuiz),
-                                        ('/profile/quiz/[^\/]+', ProfileQuiz),
-                                        ('/profile/user/[^\/]+', ProfileUser),
-                                        ('/post/create_quiz', CreateQuizPost),
-                                        ('/txt/quiz_list', TextQuizList),
+                                        ('/quiz/create_quiz', CreateQuiz),
+                                        ('/quiz/profile/[^\/]+', ProfileQuiz),
+                                        ('/user/profile/[^\/]+', ProfileUser),
+                                        ('/post/quiz/create_quiz', CreateQuizPost),
+                                        ('/txt/quiz/quiz_list', TextQuizList),
+                                        ('/quiz/modify/[^\/]+', ModifyQuiz)                                
                                     ],
                                     debug=True
                                 )

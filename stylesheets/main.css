@@ -14,15 +14,14 @@ div.my_quizzes {
     max-width: 700px;
     background-color: #66f;
     border: 3px solid #000;
+    font-size: 90%;
     -moz-border-radius: 7px;
 }
 
-ul.quiz {
-    padding-top: 3px;
-    padding-bottom: 3px;
-    margin-left: 8px;
-    margin-right: 8px;
+div.quiz {
+    margin: 2px;
+    padding-left: 8px;
     background-color: #ccf;
-    ;border: 2px solid #000;
-    -moz-border-radius: 7px;
+    ;border: 1px solid #448;
+    -moz-border-radius: 5px;
 }

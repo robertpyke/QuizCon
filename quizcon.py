@@ -23,6 +23,12 @@ class BasicQuiz(db.Model):
 
     def print_me (self):
         return_string = '<ul><li>Title: ' + self.title + '</li>' + '<li>Category: ' + self.category + '</li></ul>'
+        return_string = return_string + '<ul class="questions">'        
+        for q_key in self.questions:
+            question = Question.get(q_key)
+            return_string = return_string + '<li class="question">' + question.prompt + '</li>'
+
+        return_string = return_string + '</ul>'
         return return_string
 
 class Question(db.Model):
@@ -75,17 +81,54 @@ class ModifyQuiz(webapp.RequestHandler):
         user = users.get_current_user()
 
         quiz = None
+        # Try to load the specified quiz
         try:
             quiz = BasicQuiz.get(quiz_key)
         except:
+        # Failed to load the quiz
             self.response.out.write('<html><body><p>Bad Quiz Key.. No such quiz!</p></body></html>')
             return
         
+        # If the user is not the author
         if user != quiz.author:
             self.response.out.write("<html><body><p>You don't have permission to edit that quiz</p></body></html>")
         else:
-            self.response.out.write('<html><body><p>Quiz_Key: ' + quiz_key + '</p>')    
-            self.response.out.write('<p>' + quiz.print_me() + '</p></body></html>')
+            # We found the quiz, and the current user is the author.
+            self.response.out.write('<html><body>')
+
+            self.response.out.write('<p>Quiz_Key: ' + quiz_key + '</p>')    
+            self.response.out.write(quiz.print_me())
+            
+            # Print form to add a question
+            self.response.out.write('<form action="/post/quiz/add_question" method="post">')            
+            self.response.out.write('<input type="hidden" name="quiz_key" value="' + quiz_key + '"/>')
+            self.response.out.write("""
+                    <table class="form">
+                        <tr>
+                            <td>
+                                <p class="prompt">Question prompt: </p>
+                            </td>
+                            <td>
+                                <input type="text" name="prompt" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="prompt">Answer: </p>
+                            </td>
+                            <td>
+                                <input type="text" name="answer" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input type="submit" value="Add Question" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            """)
+            self.response.out.write('</body></html>')
 
 
 class ProfileUser(webapp.RequestHandler):
@@ -152,6 +195,31 @@ class CreateQuizPost(webapp.RequestHandler):
         
         self.redirect('/quiz/modify/' + str(b_quiz.key()))
 
+class AddQuestionPost(webapp.RequestHandler):
+    def post(self):
+        question = Question()
+
+        quiz_key = self.request.get('quiz_key')
+
+        question.prompt = self.request.get('prompt')
+        question.answer = self.request.get('answer')
+
+        question.put()
+        
+        quiz = None
+        # Try to load the specified quiz
+        try:
+            quiz = BasicQuiz.get(quiz_key)
+        except:
+            # TODO
+            return
+
+        # Add the question to the quiz
+        quiz.questions.append(question.key())  
+        quiz.put()
+
+        self.redirect('/quiz/modify/' + str(quiz_key))
+
 class CreateQuiz(webapp.RequestHandler):
     @login_required
     def get(self):
@@ -187,6 +255,7 @@ class CreateQuiz(webapp.RequestHandler):
                                     <option value="maths">Mathematics</option>
                                     <option value="media">Media (Music, TV, etc.)</option>
                                     <option value="sci_tech">Science/Tech</option>
+                                    <option value="youtube">YouTube</option>
                                 </select>
                             </td>
                         </tr>
@@ -209,7 +278,8 @@ application = webapp.WSGIApplication(
                                         ('/user/profile/[^\/]+', ProfileUser),
                                         ('/post/quiz/create_quiz', CreateQuizPost),
                                         ('/txt/quiz/quiz_list', TextQuizList),
-                                        ('/quiz/modify/[^\/]+', ModifyQuiz)                                
+                                        ('/quiz/modify/[^\/]+', ModifyQuiz),
+                                        ('/post/quiz/add_question', AddQuestionPost)
                                     ],
                                     debug=True
                                 )

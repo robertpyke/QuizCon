@@ -22,7 +22,7 @@ class BasicQuiz(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
 
     def print_me (self):
-        return_string = '<ul><li>Title: ' + self.title + '</li>' + '<li>Category: ' + self.category + '</li></ul>'
+        return_string = '<h4>' + self.title + '</h4>' + '<p>Category: ' + self.category + '</p>'
         return_string = return_string + '<ul class="questions">'        
         for q_key in self.questions:
             question = Question.get(q_key)
@@ -94,9 +94,7 @@ class ModifyQuiz(webapp.RequestHandler):
             self.response.out.write("<html><body><p>You don't have permission to edit that quiz</p></body></html>")
         else:
             # We found the quiz, and the current user is the author.
-            self.response.out.write('<html><body>')
-
-            self.response.out.write('<p>Quiz_Key: ' + quiz_key + '</p>')    
+            self.response.out.write('<html><head<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" /></head><body>')
             self.response.out.write(quiz.print_me())
             
             # Print form to add a question

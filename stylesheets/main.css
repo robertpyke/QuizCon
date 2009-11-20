@@ -1,5 +1,5 @@
 body {
-;x    background-color: #2f3693;
+;x    background-color: #58a;
 ;x    background-image: url("/images/background.png");
 ;x    background-repeat: repeat-x;
 }
@@ -13,42 +13,53 @@ td {
     vertical-align: top;    
 }
 
-td.body {
-    
+td.body {   
+;x    background-color: #fff;
+;x    -moz-border-radius: 3px;
     padding: 1em 0.3em;
+    margin: 0.3em;
 }
 
 /* Links */
 
 td.links {
-    width: 200px;
+    width: 160px;
 }
 
 td.links ul {
+    -moz-border-radius: 3px;
     padding: 0.2em;
     list-style-type: none;
-    margin: 0.3em;
-;x    background-color: #aac;
-;x    -moz-border-radius: 3px;
+    margin: 0.1em;
 }
 
 td.links ul a {
-    padding-right: 32px;
-    padding-left: 32px;
+    padding-right: 12px;
+    padding-left: 6px;
+    margin: 2px;
     display: block;
-    line-height: 45px;
+    line-height: 28px;
     text-decoration: none;
     font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 21px;
+    font-size: 20px;
     color: #fff;
-    border: 2px solid #000;
+    -moz-border-radius: 3px;
+}
+td.links ul.myLinks {   
+    background-color: #aaf;
+}
+
+td.links ul.otherLinks {   
+    background-color: #afa;
 }
 
 td.links ul.myLinks a {
+    border: 2px solid #009;
     background-color: #58c;
 }
 
 td.links ul.otherLinks a {
+    border: 2px solid #090;
     background-color: #5c8;
 }
 
@@ -105,7 +116,7 @@ p.logo {
 }
 
 p.logo img {
-    margin: 0.3em;
+    margin: 0.5em;
     padding: 0.2em;
     background-color: #ccf;
     -moz-border-radius: 5px;

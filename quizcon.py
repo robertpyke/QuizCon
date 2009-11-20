@@ -1,3 +1,6 @@
+import os
+from google.appengine.ext.webapp import template
+
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -37,31 +40,20 @@ class Question(db.Model):
     
 class HomePage(webapp.RequestHandler):
     def get(self):
-        self.response.out.write('<html><head><title>' + const['home_title'] + '</title></head>')
-        self.response.out.write('<body>')
 
         user = users.get_current_user()
+        template_values = {}
         if user:
-            self.response.out.write('<h3>Welcome ' + user.nickname() + '</h3>')
-            self.response.out.write('<p><a href="' + users.create_logout_url(self.request.uri) + '">Logout</a></p>')   
+            template_values['log_text'] = "Sign out"
+            template_values['log_link'] = users.create_logout_url(self.request.uri)
+            template_values['nickname'] = user.nickname()
         else:
-            self.response.out.write('<h3>Welcome</h3>')
-            self.response.out.write('<p><a href="' + users.create_login_url(self.request.uri) + '">Login</a></p>')
+            template_values['log_text'] = "Sign in"
+            template_values['log_link'] = users.create_login_url(self.request.uri)
 
-        self.response.out.write('<ul class="links">')
-        self.response.out.write("""
-            <li><a href="/quiz/create_quiz">Create Quiz</a></li>
-            <li><a href="/txt/quiz/quiz_list">List of stored quizzes (txt)</a></li>
-        """)
-           
-        if user: self.response.out.write('<li><a href="/user/profile/' + user.nickname() + '">My Quizzes</a></li>')
-
-        self.response.out.write("""
-                        </ul>
-                    </p>
-                </body>
-            </html>
-        """)
+        path = os.path.join(os.path.dirname(__file__), 'templates')
+        path = os.path.join(path, 'index.html')
+        self.response.out.write(template.render(path, template_values))
 
 class ProfileQuiz(webapp.RequestHandler):
     def get(self):

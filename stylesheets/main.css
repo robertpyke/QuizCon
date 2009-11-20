@@ -90,9 +90,12 @@ div.quiz {
     -moz-border-radius: 5px;
 }
 
-
-
-
+/* Sign in / Sign out row */
+tr.log {
+    text-align: right;
+    font-size: 70%;
+}
+/* Sign in / Sign out row - END */
 
 
 /* Logo */

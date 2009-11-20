@@ -7,19 +7,25 @@ GETS:
 /
     Display a home page
 
+/my/profile
+    Display the user's profile, and allow for editing
+
+/my/quizzes
+    Display the user's quizzes, and allow for links to modification, removal, etc.
+
 /quiz/create_quiz
     Display a form to add a quiz
 
-/quiz/take/[quiz_name]
+/quiz/take/[quiz_id]
     Do a quiz
 
-/quiz/profile/[quiz_name]
+/quiz/profile/[quiz_id]
     Show the stats for a quiz
 
-/user/profile/[user]
+/user/profile/[user_id]
     Show the stats for the user
 
-/quiz/modify/[quiz_name]
+/quiz/modify/[quiz_id]
     Allows the author of a quiz to add questions, remove questions, etc.
 
 /login

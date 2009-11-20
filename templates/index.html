@@ -5,7 +5,14 @@
     </head>
     <body>
 
-        <table>
+        <table>            
+            <tr class="log">
+                <td colspan = "2">
+                    <p>
+                        {{ nickname }} <a href="{{ log_link }}">{{ log_text }}</a>
+                    </p>
+                </td>
+            </tr>
             <tr>
                 <th colspan="2">
                     <p class="logo">            
@@ -25,22 +32,7 @@
 
                 </td>
                 <td class="body">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ac elit vitae nisi convallis posuere. Maecenas et sem nulla, at pellentesque justo. Aenean id felis nulla, eget hendrerit ligula. Sed tincidunt tincidunt porttitor. Sed eu imperdiet tellus. Quisque pellentesque tempor risus, a feugiat ante dictum a. Maecenas lobortis mattis dolor quis porta. Duis pulvinar dapibus neque sed porta. Morbi mollis eros quis lectus posuere pretium. Quisque in elit quam, eget molestie orci. Aliquam fringilla metus vel neque mattis ut elementum orci blandit. Aenean convallis varius tortor nec aliquet. Morbi non massa rutrum sapien tempor euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultrices blandit varius. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis at auctor nisl. Pellentesque sollicitudin blandit nisl, et consectetur ante malesuada sit amet. Aenean volutpat dui a purus auctor rhoncus a ut purus.
-
-                </p>
-                <p>
-                    Ut molestie convallis sem, sit amet fermentum neque scelerisque sit amet. Vivamus tempus mollis nunc, sit amet laoreet nisl tempor non. Donec nec diam eros. Nam dignissim pulvinar pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam id quam id dui mattis fringilla. Phasellus ut nunc lorem. Nullam rhoncus risus eu orci porttitor dictum quis ac leo. Mauris lacinia aliquet tortor, sit amet convallis odio pulvinar sit amet. Aenean luctus, sapien et aliquam mollis, tellus nulla scelerisque eros, commodo mattis mi libero vel sem. Suspendisse potenti. Fusce congue, massa at placerat consectetur, diam ante sollicitudin lectus, vitae gravida tortor velit ac dui. Duis viverra rutrum nibh, quis egestas sapien vehicula ac. Aliquam sem lectus, euismod sed sodales eget, aliquam vitae ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Maecenas luctus nisl nec arcu suscipit at vulputate est vestibulum. Sed tortor metus, lacinia id lobortis eu, accumsan ut est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel blandit mi. Pellentesque rutrum mollis tellus eu aliquam.
-                </p>
-                <p>
-                    Donec hendrerit tristique augue, eget accumsan nibh vestibulum ut. In lobortis turpis eget nibh placerat eget porttitor tellus fringilla. Nam a sem ornare tellus semper scelerisque. Phasellus laoreet lectus justo. Aenean blandit commodo tortor vitae suscipit. Nulla et consectetur tortor. Pellentesque imperdiet pretium tellus, eget ultricies purus egestas non. Curabitur dictum auctor erat, vel consectetur lorem egestas nec. Morbi semper, metus vitae mattis tristique, urna purus tristique orci, eget auctor urna quam id dui. Suspendisse potenti. Duis malesuada scelerisque nunc id pulvinar. Integer at augue sit amet elit lacinia interdum et fringilla tortor. Aliquam pretium tortor vel dolor mollis porta. Vivamus nec libero turpis. Vivamus a neque non massa tincidunt laoreet id vitae magna. Integer posuere libero ac urna tincidunt auctor. Ut eget metus nunc, a tristique ipsum. Praesent metus justo, vehicula tincidunt semper non, cursus at libero.
-                </p>
-                <p>
-                    Mauris id lectus nisl. Phasellus dolor est, feugiat sed adipiscing vel, dignissim nec diam. Quisque sit amet nisl est, sed adipiscing eros. Donec interdum turpis vitae ante egestas at imperdiet risus vehicula. Proin justo felis, vulputate eget pretium nec, gravida et eros. In in dapibus nibh. Aliquam ultricies sapien eget lorem suscipit in elementum enim iaculis. Nulla consectetur interdum varius. In sit amet odio dui. Praesent convallis mattis congue. Nulla nisl odio, malesuada id tincidunt quis, adipiscing quis felis. Etiam vel libero ligula. Duis ut risus diam. Suspendisse dignissim ligula sit amet sem pellentesque suscipit.
-                </p>
-                <p>
-                    Morbi egestas mollis hendrerit. Praesent eu nibh dolor. Morbi nec lacus arcu. Curabitur a magna lorem, eu venenatis est. Etiam aliquet eros vel urna imperdiet eleifend dictum arcu faucibus. Suspendisse accumsan nulla id erat euismod auctor. Nullam consectetur pellentesque dolor, vel volutpat nibh dapibus consectetur. Integer id nibh eget tellus consequat commodo viverra non nunc. Proin facilisis, elit vel faucibus facilisis, libero ipsum pretium nisl, sit amet laoreet nisl erat ut nunc. In vestibulum, urna et lacinia pulvinar, purus odio tristique lectus, consequat fringilla nunc augue eu eros. Integer a sem vitae mi fringilla condimentum. Nam commodo suscipit auctor. Praesent bibendum tristique nisi at laoreet. Ut eleifend est vitae nibh pretium blandit. Suspendisse et turpis mauris, ac condimentum massa. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam vitae nulla vitae justo suscipit facilisis eget vel orci. Maecenas malesuada ullamcorper placerat. Quisque vitae purus arcu. Mauris posuere diam porttitor nisl pretium id ultrices arcu consectetur. 
-                </p>         
+                    {{ body_text }}
                 </td>                
             </tr>
         </table>

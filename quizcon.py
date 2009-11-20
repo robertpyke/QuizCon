@@ -38,15 +38,18 @@ class Question(db.Model):
     prompt = db.StringProperty()
     answer = db.StringProperty()
     
+# Get / (index) handler
 class HomePage(webapp.RequestHandler):
     def get(self):
 
         user = users.get_current_user()
         template_values = {}
+        template_values['base_uri'] = const['base_uri']
         if user:
             template_values['log_text'] = "Sign out"
-            template_values['log_link'] = users.create_logout_url(self.request.uri)
+            template_values['log_link'] = users.create_logout_url(const['base_uri'])
             template_values['nickname'] = user.nickname()
+            template_values['body_text'] = ("Welcome " + user.nickname())
         else:
             template_values['log_text'] = "Sign in"
             template_values['log_link'] = users.create_login_url(self.request.uri)
@@ -55,6 +58,25 @@ class HomePage(webapp.RequestHandler):
         path = os.path.join(path, 'index.html')
         self.response.out.write(template.render(path, template_values))
 
+# Get /my/profile (handler)
+class MyProfile(webapp.RequestHandler):
+    @login_required
+    def get(self):
+        user = users.get_current_user()
+        template_values = {}
+        template_values['base_uri'] = const['base_uri']
+        template_values['log_text'] = "Sign out"
+        template_values['log_link'] = users.create_logout_url(const['base_uri'])
+        template_values['nickname'] = user.nickname()
+        
+        users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
+        users_quizzes_count = users_quizzes.count()
+        template_values['quiz_list_size'] = str(users_quizzes_count)
+        
+        path = os.path.join(os.path.dirname(__file__), 'templates')
+        path = os.path.join(path, 'my_profile.html')
+        self.response.out.write(template.render(path, template_values))
+        
 class ProfileQuiz(webapp.RequestHandler):
     def get(self):
         quiz_name = None
@@ -263,6 +285,7 @@ class CreateQuiz(webapp.RequestHandler):
 application = webapp.WSGIApplication( 
                                     [
                                         ('/', HomePage), 
+                                        ('/my/profile', MyProfile),
                                         ('/quiz/create_quiz', CreateQuiz),
                                         ('/quiz/profile/[^\/]+', ProfileQuiz),
                                         ('/user/profile/[^\/]+', ProfileUser),

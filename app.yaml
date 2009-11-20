@@ -4,6 +4,10 @@ runtime: python
 api_version: 1
 
 handlers:
+- url: /images
+  static_dir: images
+- url: /templates
+  static_dir: templates
 - url: /stylesheets
   static_dir: stylesheets
 - url: /.*

@@ -1,6 +1,60 @@
+body {
+;x    background-color: #2f3693;
+;x    background-image: url("/images/background.png");
+;x    background-repeat: repeat-x;
+}
+
+table {
+    width: 100%;
+}
+
 td {
     padding: 0.3em;
+    vertical-align: top;    
 }
+
+td.body {
+    
+    padding: 1em 0.3em;
+}
+
+/* Links */
+
+td.links {
+    width: 200px;
+}
+
+td.links ul {
+    padding: 0.2em;
+    list-style-type: none;
+    margin: 0.3em;
+;x    background-color: #aac;
+;x    -moz-border-radius: 3px;
+}
+
+td.links ul a {
+    background-color: #58c;
+    padding-right: 32px;
+    padding-left: 32px;
+    display: block;
+    line-height: 45px;
+    text-decoration: none;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 21px;
+    ;color: #371C1C;
+    color: #fff;
+    border: 2px solid #000;
+}
+
+td.links ul a:hover {
+    background-color: #ccd;
+    color: #371C1C;
+}
+
+td.links ul li {
+}
+
+/* Links - END */
 
 table.form {
     margin-top: 4px;
@@ -26,3 +80,22 @@ div.quiz {
     -moz-border-radius: 5px;
 }
 
+
+
+
+
+
+/* Logo */
+
+p.logo {
+    text-align: center;
+}
+
+p.logo img {
+    margin: 0.3em;
+    padding: 0.2em;
+    background-color: #ccf;
+    -moz-border-radius: 5px;
+}
+
+/* Logo - END */

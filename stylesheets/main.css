@@ -33,7 +33,6 @@ td.links ul {
 }
 
 td.links ul a {
-    background-color: #58c;
     padding-right: 32px;
     padding-left: 32px;
     display: block;
@@ -41,18 +40,29 @@ td.links ul a {
     text-decoration: none;
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 21px;
-    ;color: #371C1C;
     color: #fff;
     border: 2px solid #000;
 }
 
-td.links ul a:hover {
+td.links ul.myLinks a {
+    background-color: #58c;
+}
+
+td.links ul.otherLinks a {
+    background-color: #5c8;
+}
+
+td.links ul.myLinks a:hover {
     background-color: #ccd;
     color: #371C1C;
 }
 
-td.links ul li {
+td.links ul.otherLinks a:hover {
+    background-color: #cdc;
+    color: #371C1C;
 }
+
+
 
 /* Links - END */
 

@@ -1,40 +1,5 @@
-<html>
-    <head>
-        <title>QuizCon - My Profile</title>
-        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css"/> 
-    </head>
-    <body>
-
-        <table>            
-            <tr class="log">
-                <td colspan = "2">
-                    <p>
-                        {{ nickname }} <a href="{{ log_link }}">{{ log_text }}</a>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th colspan="2">
-                    <p class="logo">            
-                        <a href="{{ base_uri }}"><img src="/images/logo.png" alt="QuizCon"/></a>
-                    </p>
-                </th>
-            </tr>
-            <tr>
-                <td class="links">
-                    <ul class="myLinks">
-                        <li><a href="/my/profile">My Profile</a></li>
-                        <li><a href="/my/quizlist">My Quizzes</a></li>
-                    </ul>
-                    <ul class="otherLinks">
-                        <li><a href="/quiz/quizlist">Quizzes</a></li>
-                    </ul>
-
-                </td>
-                <td class="body">
-                    I've created <a href="/my/quizlist"> {{ quiz_list_size }} quizzes</a>
-                </td>                
-            </tr>
-        </table>
-    </body>
-</html>
+<div class="body">
+    <p>
+        I've created <a href="/my/quiz_list"> {{ quiz_list_size }} quizzes</a>
+    </p>
+</div>

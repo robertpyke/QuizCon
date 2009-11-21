@@ -49,14 +49,23 @@ class HomePage(webapp.RequestHandler):
             template_values['log_text'] = "Sign out"
             template_values['log_link'] = users.create_logout_url(const['base_uri'])
             template_values['nickname'] = user.nickname()
-            template_values['body_text'] = ("Welcome " + user.nickname())
+            template_values['body'] = ('<div class="body"><p>Welcome ' + user.nickname() + '</p></div>')
         else:
             template_values['log_text'] = "Sign in"
             template_values['log_link'] = users.create_login_url(self.request.uri)
 
         path = os.path.join(os.path.dirname(__file__), 'templates')
-        path = os.path.join(path, 'index.html')
-        self.response.out.write(template.render(path, template_values))
+        links_path = os.path.join(path, 'links.html')
+       
+        links_template_values = {}
+        links_template_values['my_profile'] = "notCurrent"
+        links_template_values['my_quiz_list'] = "notCurrent"
+        links_template_values['quiz_quiz_list'] = "notCurrent"
+
+        template_values['links'] = template.render(links_path, links_template_values)
+
+        main_path = os.path.join(path, 'index.html')
+        self.response.out.write(template.render(main_path, template_values))
 
 # Get /my/profile (handler)
 class MyProfile(webapp.RequestHandler):
@@ -71,11 +80,26 @@ class MyProfile(webapp.RequestHandler):
         
         users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
         users_quizzes_count = users_quizzes.count()
-        template_values['quiz_list_size'] = str(users_quizzes_count)
         
         path = os.path.join(os.path.dirname(__file__), 'templates')
-        path = os.path.join(path, 'my_profile.html')
-        self.response.out.write(template.render(path, template_values))
+        links_path = os.path.join(path, 'links.html')
+        
+        links_template_values = {}
+        links_template_values['my_profile'] = "current"
+        links_template_values['my_quiz_list'] = "notCurrent"
+        links_template_values['quiz_quiz_list'] = "notCurrent"
+
+        template_values['links'] = template.render(links_path, links_template_values)
+
+        body_path = os.path.join(path, 'my_profile.html')
+        
+        body_template_values = {}
+        body_template_values['quiz_list_size'] = str(users_quizzes_count)
+
+        template_values['body'] = template.render(body_path, body_template_values)
+
+        main_path = os.path.join(path, 'index.html')
+        self.response.out.write(template.render(main_path, template_values))
         
 class ProfileQuiz(webapp.RequestHandler):
     def get(self):

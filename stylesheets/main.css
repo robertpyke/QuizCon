@@ -16,14 +16,18 @@ td {
 td.body {   
 ;x    background-color: #fff;
 ;x    -moz-border-radius: 3px;
-    padding: 1em 0.3em;
-    margin: 0.3em;
 }
 
 /* Links */
 
 td.links {
     width: 160px;
+}
+
+td.links div.links {
+    background-color: #eee;
+    -moz-border-radius: 3px;
+    border: 2px solid #999;
 }
 
 td.links ul {
@@ -36,39 +40,41 @@ td.links ul {
 td.links ul a {
     padding-right: 12px;
     padding-left: 6px;
-    margin: 2px;
+    margin: 0.15em;
     display: block;
-    line-height: 28px;
     text-decoration: none;
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 20px;
     color: #fff;
     -moz-border-radius: 3px;
 }
-td.links ul.myLinks {   
-    background-color: #aaf;
-}
 
-td.links ul.otherLinks {   
-    background-color: #afa;
-}
-
-td.links ul.myLinks a {
-    border: 2px solid #009;
+td.links ul.myLinks a.notCurrent {
+    border: 2px solid #00b;
     background-color: #58c;
 }
 
-td.links ul.otherLinks a {
-    border: 2px solid #090;
+td.links ul.myLinks a.current {
+    border: 2px solid #00b;
+    background-color: #56f;
+}
+
+td.links ul.otherLinks a.notCurrent {
+    border: 2px solid #0b0;
     background-color: #5c8;
 }
 
-td.links ul.myLinks a:hover {
+td.links ul.otherLinks a.current {
+    border: 2px solid #0b0;
+    background-color: #5f6;
+}
+
+td.links ul.myLinks a.notCurrent:hover {
     background-color: #ccd;
     color: #371C1C;
 }
 
-td.links ul.otherLinks a:hover {
+td.links ul.otherLinks a.notCurrent:hover {
     background-color: #cdc;
     color: #371C1C;
 }

@@ -6,6 +6,7 @@ body {
 
 div.body {
     margin-left: 20%;
+    padding: 1.5em;
 }
 
 /* Links */
@@ -13,13 +14,12 @@ div.body {
 div.links {
     float: left;
     width: 20%;
-    background-color: #eee;
-    -moz-border-radius: 3px;
-    border: 2px solid #999;
-    margin: 0.2em;
 }
 
 div.links ul {
+    background-color: #eee;
+    -moz-border-radius: 3px;
+    border: 2px solid #999;
     padding: 0.2em;
     margin: 0.1em;
     list-style-type: none;
@@ -71,14 +71,6 @@ div.links ul.otherLinks a.notCurrent:hover {
 
 /* Links - END */
 
-table.form {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    background-color: #33aa88;
-    border: 3px solid #000;
-    -moz-border-radius: 7px;
-}
-
 div.my_quizzes {
     max-width: 700px;
     background-color: #66f;
@@ -118,3 +110,17 @@ p.logo img {
 
 /* Logo - END */
 
+form {
+    padding: 0.5em;
+    background-color: #33aa88;
+    border: 3px solid #000;
+    -moz-border-radius: 7px;
+    width: 50%;
+}
+
+p.prompt {
+    display: inline;
+}
+
+span.input {
+}

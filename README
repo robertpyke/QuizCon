@@ -1,5 +1,5 @@
 Author: Robert Pyke
-Last Updated: 2009/11/18
+Last Updated: 2009/11/24
 
 URI Map (API)
 
@@ -7,11 +7,19 @@ GETS:
 /
     Display a home page
 
+
+######### /my/ ############################################
+
 /my/profile
     Display the user's profile, and allow for editing
 
 /my/quizzes
     Display the user's quizzes, and allow for links to modification, removal, etc.
+
+###########################################################
+
+
+######### /quiz ###########################################
 
 /quiz/create_quiz
     Display a form to add a quiz
@@ -27,6 +35,8 @@ GETS:
 
 /quiz/modify/[quiz_id]
     Allows the author of a quiz to add questions, remove questions, etc.
+
+###########################################################
 
 /login
     Handle login redirect

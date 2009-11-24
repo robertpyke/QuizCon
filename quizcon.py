@@ -78,8 +78,6 @@ class MyProfile(webapp.RequestHandler):
         template_values['log_link'] = users.create_logout_url(const['base_uri'])
         template_values['nickname'] = user.nickname()
         
-        users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
-        users_quizzes_count = users_quizzes.count()
         
         path = os.path.join(os.path.dirname(__file__), 'templates')
         links_path = os.path.join(path, 'links.html')
@@ -93,7 +91,9 @@ class MyProfile(webapp.RequestHandler):
 
         body_path = os.path.join(path, 'my_profile.html')
         
-        body_template_values = {}
+        body_template_values = {}        
+        users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
+        users_quizzes_count = users_quizzes.count()
         body_template_values['quiz_list_size'] = str(users_quizzes_count)
 
         template_values['body'] = template.render(body_path, body_template_values)
@@ -101,6 +101,39 @@ class MyProfile(webapp.RequestHandler):
         main_path = os.path.join(path, 'index.html')
         self.response.out.write(template.render(main_path, template_values))
         
+# Get /my/quiz_list (handler)
+class MyQuizList(webapp.RequestHandler):
+    @login_required
+    def get(self):
+        user = users.get_current_user()
+        template_values = {}
+        template_values['base_uri'] = const['base_uri']
+        template_values['log_text'] = "Sign out"
+        template_values['log_link'] = users.create_logout_url(const['base_uri'])
+        template_values['nickname'] = user.nickname()
+        
+        
+        path = os.path.join(os.path.dirname(__file__), 'templates')
+        links_path = os.path.join(path, 'links.html')
+        
+        links_template_values = {}
+        links_template_values['my_profile'] = "current"
+        links_template_values['my_quiz_list'] = "notCurrent"
+        links_template_values['quiz_quiz_list'] = "notCurrent"
+
+        template_values['links'] = template.render(links_path, links_template_values)
+
+        body_path = os.path.join(path, 'my_quiz_list.html')
+        
+        body_template_values = {}
+        users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
+        users_quizzes_count = users_quizzes.count()
+        body_template_values['quiz_list_size'] = str(users_quizzes_count)
+
+        template_values['body'] = template.render(body_path, body_template_values)
+
+        main_path = os.path.join(path, 'index.html')
+        self.response.out.write(template.render(main_path, template_values))
 class ProfileQuiz(webapp.RequestHandler):
     def get(self):
         quiz_name = None
@@ -310,6 +343,7 @@ application = webapp.WSGIApplication(
                                     [
                                         ('/', HomePage), 
                                         ('/my/profile', MyProfile),
+                                        ('/my/quiz_list', MyQuizList),
                                         ('/quiz/create_quiz', CreateQuiz),
                                         ('/quiz/profile/[^\/]+', ProfileQuiz),
                                         ('/user/profile/[^\/]+', ProfileUser),

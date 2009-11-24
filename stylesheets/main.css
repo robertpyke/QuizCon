@@ -4,40 +4,28 @@ body {
 ;x    background-repeat: repeat-x;
 }
 
-table {
-    width: 100%;
-}
-
-td {
-    padding: 0.3em;
-    vertical-align: top;    
-}
-
-td.body {   
-;x    background-color: #fff;
-;x    -moz-border-radius: 3px;
+div.body {
+    margin-left: 20%;
 }
 
 /* Links */
 
-td.links {
-    width: 160px;
-}
-
-td.links div.links {
+div.links {
+    float: left;
+    width: 20%;
     background-color: #eee;
     -moz-border-radius: 3px;
     border: 2px solid #999;
+    margin: 0.2em;
 }
 
-td.links ul {
-    -moz-border-radius: 3px;
+div.links ul {
     padding: 0.2em;
-    list-style-type: none;
     margin: 0.1em;
+    list-style-type: none;
 }
 
-td.links ul a {
+div.links ul a {
     padding-right: 12px;
     padding-left: 6px;
     margin: 0.15em;
@@ -49,32 +37,32 @@ td.links ul a {
     -moz-border-radius: 3px;
 }
 
-td.links ul.myLinks a.notCurrent {
+div.links ul.myLinks a.notCurrent {
     border: 2px solid #00b;
     background-color: #58c;
 }
 
-td.links ul.myLinks a.current {
+div.links ul.myLinks a.current {
     border: 2px solid #00b;
     background-color: #56f;
 }
 
-td.links ul.otherLinks a.notCurrent {
+div.links ul.otherLinks a.notCurrent {
     border: 2px solid #0b0;
     background-color: #5c8;
 }
 
-td.links ul.otherLinks a.current {
+div.links ul.otherLinks a.current {
     border: 2px solid #0b0;
     background-color: #5f6;
 }
 
-td.links ul.myLinks a.notCurrent:hover {
+div.links ul.myLinks a.notCurrent:hover {
     background-color: #ccd;
     color: #371C1C;
 }
 
-td.links ul.otherLinks a.notCurrent:hover {
+div.links ul.otherLinks a.notCurrent:hover {
     background-color: #cdc;
     color: #371C1C;
 }
@@ -108,7 +96,7 @@ div.quiz {
 }
 
 /* Sign in / Sign out row */
-tr.log {
+div.log {
     text-align: right;
     font-size: 70%;
 }
@@ -129,3 +117,4 @@ p.logo img {
 }
 
 /* Logo - END */
+

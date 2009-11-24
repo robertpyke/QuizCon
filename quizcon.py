@@ -49,7 +49,7 @@ class HomePage(webapp.RequestHandler):
             template_values['log_text'] = "Sign out"
             template_values['log_link'] = users.create_logout_url(const['base_uri'])
             template_values['nickname'] = user.nickname()
-            template_values['body'] = ('<div class="body"><p>Welcome ' + user.nickname() + '</p></div>')
+            template_values['body'] = ('<p>Welcome ' + user.nickname() + '</p>')
         else:
             template_values['log_text'] = "Sign in"
             template_values['log_link'] = users.create_login_url(self.request.uri)

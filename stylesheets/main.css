@@ -21,7 +21,7 @@ div.links ul {
     -moz-border-radius: 3px;
     border: 2px solid #999;
     padding: 0.2em;
-    margin: 0.1em;
+    margin: 0.2em;
     list-style-type: none;
 }
 
@@ -110,17 +110,62 @@ p.logo img {
 
 /* Logo - END */
 
-form {
+;x div.form {
     padding: 0.5em;
     background-color: #33aa88;
     border: 3px solid #000;
-    -moz-border-radius: 7px;
-    width: 50%;
+    -moz-border-radius: 3px;
+    display: inline;
 }
 
-p.prompt {
+;x p.prompt {
     display: inline;
+    margin-right: 0.5em;
 }
 
 span.input {
 }
+
+
+label
+{
+width: 5em;
+float: left;
+text-align: right;
+margin-right: 1.5em;
+display: block
+}
+
+p.submit {
+    text-align: right;
+    margin-right: 2.5em;
+}
+
+.submit input
+{
+}
+input
+{
+background-color: #ccf;
+border: 1px solid #781351
+}
+
+.submit input
+{
+color: #fff;
+background-color: #56f;
+border: 2px outset #d7b9c9
+}
+fieldset
+{
+border: 1px solid #781351;
+width: 20em
+}
+
+legend
+{
+background-color: #56f;
+color: #fff;
+border: 1px solid #781351;
+padding: 2px 6px
+} 

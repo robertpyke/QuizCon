@@ -2,14 +2,17 @@
     I've created <a href="/my/quiz_list"> {{ quiz_list_size }} quizzes</a>
 </p>
 
-<form>
+<form action="#TODO#">
     <div class="form">
-        <span class="prompt">
-            <p class="prompt">        
-                Category:
-            </p>
-        </span>
-        <span class="input">
+        <fieldset>
+        <legend>Create a new quiz?</legend>
+        <p class="prompt">
+            <label for="title">Title:</label>
+            <input type="text" name="text"/>
+        </p>
+       
+       <p class="prompt">
+            <label for="category">Category:</label>
             <select name="category">
                 <option value="history">History</option>
                 <option value="maths">Mathematics</option>
@@ -17,9 +20,10 @@
                 <option value="sci_tech">Science/Tech</option>
                 <option value="youtube">YouTube</option>
             </select>        
-        </span>
-        <p>
+        </p>
+        <p class="submit">
             <input type="submit" value="Create Quiz"/>
         </p>
-    </div>
+    </fieldset>
 </form>
+

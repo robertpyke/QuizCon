@@ -8,6 +8,17 @@ div.body ul li:before {
     content: "\2192 \0020";
 }
 
+div.wrapper {
+
+    margin: 0 auto; /* Center align for Good browsers like Firefox, Opera, Netscape */
+    text-align: left;
+    max-width: 960px;
+    -moz-border-radius: 8px;
+    border: 1px solid #ccf;
+    padding: 1em;
+
+}
+
 body {
 ;x    background-color: #58a;
 ;x    background-image: url("/images/background.png");
@@ -16,6 +27,7 @@ body {
 
 div.body {
     margin-left: 200px;
+    min-height: 15em;
 }
 
 /* Links */
@@ -104,14 +116,12 @@ p.quiz {
 p.floatOptions {
     float: right;
     text-align: right;
-    margin-right: 2em;
     font-size: 70%;
     line-height: 80%;
 }
 
 p.options {
     text-align: right;
-    margin-right: 2em;
     font-size: 70%;
     line-height: 80%;
 }

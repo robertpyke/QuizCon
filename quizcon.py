@@ -162,11 +162,30 @@ class ProfileQuiz(webapp.RequestHandler):
 class ModifyQuiz(webapp.RequestHandler):
     @login_required
     def get(self):
+        
         quiz_key = None
         while self.request.path_info_peek() != None:
             quiz_key = self.request.path_info_pop()
 
         user = users.get_current_user()
+        
+        template_values = {}
+        template_values['base_uri'] = const['base_uri']
+        template_values['log_text'] = "Sign out"
+        template_values['log_link'] = users.create_logout_url(const['base_uri'])
+        template_values['nickname'] = user.nickname()
+        
+        
+        path = os.path.join(os.path.dirname(__file__), 'templates')
+        links_path = os.path.join(path, 'links.html')
+        
+        links_template_values = {}
+        links_template_values['my_profile'] = "notCurrent"
+        links_template_values['my_quiz_list'] = "notCurrent"
+        links_template_values['quiz_quiz_list'] = "notCurrent"
+
+        template_values['links'] = template.render(links_path, links_template_values)
+
 
         quiz = None
         # Try to load the specified quiz
@@ -174,48 +193,35 @@ class ModifyQuiz(webapp.RequestHandler):
             quiz = BasicQuiz.get(quiz_key)
         except:
         # Failed to load the quiz
-            self.response.out.write('<html><body><p>Bad Quiz Key.. No such quiz!</p></body></html>')
+            template_values['body'] = '<p class="error">Bad Quiz Key. Failed to load quiz</p>'
+
+            main_path = os.path.join(path, 'index.html')
+            self.response.out.write(template.render(main_path, template_values))
             return
         
+        if quiz == None: 
+            template_values['body'] = '<p class="error">Bad Quiz Key. Failed to load quiz</p>'
+
+            main_path = os.path.join(path, 'index.html')
+            self.response.out.write(template.render(main_path, template_values))
+            return
+
         # If the user is not the author
         if user != quiz.author:
-            self.response.out.write("<html><body><p>You don't have permission to edit that quiz</p></body></html>")
-        else:
-            # We found the quiz, and the current user is the author.
-            self.response.out.write('<html><head<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" /></head><body>')
-            self.response.out.write(quiz.print_me())
-            
-            # Print form to add a question
-            self.response.out.write('<form action="/post/quiz/add_question" method="post">')            
-            self.response.out.write('<input type="hidden" name="quiz_key" value="' + quiz_key + '"/>')
-            self.response.out.write("""
-                    <table class="form">
-                        <tr>
-                            <td>
-                                <p class="prompt">Question prompt: </p>
-                            </td>
-                            <td>
-                                <input type="text" name="prompt" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="prompt">Answer: </p>
-                            </td>
-                            <td>
-                                <input type="text" name="answer" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <input type="submit" value="Add Question" />
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            """)
-            self.response.out.write('</body></html>')
+            template_values['body'] = '''<p class="error">You don't have permission to edit that quiz</p>'''
 
+            main_path = os.path.join(path, 'index.html')
+            self.response.out.write(template.render(main_path, template_values))
+        else:
+            body_path = os.path.join(path, 'modify_quiz.html')
+            body_template_values = {}
+            body_template_values['quiz_key'] = quiz_key
+            body_template_values['quiz'] = quiz.print_me() 
+
+            template_values['body'] = template.render(body_path, body_template_values)
+
+            main_path = os.path.join(path, 'index.html')
+            self.response.out.write(template.render(main_path, template_values))
 
 class ProfileUser(webapp.RequestHandler):
     def get(self):
@@ -297,7 +303,21 @@ class AddQuestionPost(webapp.RequestHandler):
         try:
             quiz = BasicQuiz.get(quiz_key)
         except:
-            # TODO
+            # TODO: Redirect with error
+            path = os.path.join(os.path.dirname(__file__), 'templates')
+            links_path = os.path.join(path, 'links.html')
+       
+            links_template_values = {}
+            links_template_values['my_profile'] = "notCurrent"
+            links_template_values['my_quiz_list'] = "notCurrent"
+            links_template_values['quiz_quiz_list'] = "notCurrent"
+
+            template_values = {}
+            template_values['links'] = template.render(links_path, links_template_values)
+            template_values['body'] = '<p class="error">Failed to add quiz</p>'
+
+            main_path = os.path.join(path, 'index.html')
+            self.response.out.write(template.render(main_path, template_values))            
             return
 
         # Add the question to the quiz

@@ -1,0 +1,21 @@
+{{ quiz }}
+<ul class="questions"></ul>
+<form action="/post/quiz/add_question" method="post">
+<div class="form">
+    <input type="hidden" name="quiz_key" value="{{ quiz_key }}"/>
+        <fieldset>
+        <legend>Add a question?</legend>
+        <p class="prompt">
+            <label for="prompt">Prompt:</label>
+            <input type="text" name="prompt"/>
+        </p>
+        <p class="prompt">
+            <label for="prompt">Answer: </label>
+            <input type="text" name="answer"/>
+        </p>
+        <p class="submit">
+            <input type="submit" value="Add Question"/>
+        </p>
+    </fieldset>
+</div>
+</form>

@@ -314,7 +314,7 @@ class AddQuestionPost(webapp.RequestHandler):
 
             template_values = {}
             template_values['links'] = template.render(links_path, links_template_values)
-            template_values['body'] = '<p class="error">Failed to add quiz</p>'
+            template_values['body'] = '<p class="error">Failed modify quiz</p>'
 
             main_path = os.path.join(path, 'index.html')
             self.response.out.write(template.render(main_path, template_values))            

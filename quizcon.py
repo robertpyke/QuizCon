@@ -117,8 +117,8 @@ class MyQuizList(webapp.RequestHandler):
         links_path = os.path.join(path, 'links.html')
         
         links_template_values = {}
-        links_template_values['my_profile'] = "current"
-        links_template_values['my_quiz_list'] = "notCurrent"
+        links_template_values['my_profile'] = "notCurrent"
+        links_template_values['my_quiz_list'] = "current"
         links_template_values['quiz_quiz_list'] = "notCurrent"
 
         template_values['links'] = template.render(links_path, links_template_values)

@@ -1,14 +1,18 @@
-<p>
-    I've created <a href="/my/quiz_list"> {{ quiz_list_size }} quizzes</a>
+<p class="options">
+    <a href="#createQuiz">Create a quiz</a>
 </p>
+<div class="my_quizzes">
+{{ quiz_list }}
+</div>
 
-<form action="#TODO#">
+<a name="createQuiz"/>
+<form action="/post/quiz/create_quiz" method="post">
     <div class="form">
         <fieldset>
         <legend>Create a new quiz?</legend>
         <p class="prompt">
             <label for="title">Title:</label>
-            <input type="text" name="text"/>
+            <input type="text" name="title"/>
         </p>
        
        <p class="prompt">

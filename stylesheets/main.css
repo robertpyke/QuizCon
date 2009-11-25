@@ -1,3 +1,13 @@
+div.body ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1em;
+}
+
+div.body ul li:before {
+    content: "\2192 \0020";
+}
+
 body {
 ;x    background-color: #58a;
 ;x    background-image: url("/images/background.png");
@@ -5,15 +15,15 @@ body {
 }
 
 div.body {
-    margin-left: 20%;
-    padding: 1.5em;
+    margin-left: 200px;
 }
 
 /* Links */
 
 div.links {
+    text-align: left;
     float: left;
-    width: 20%;
+    width: 180px;
 }
 
 div.links ul {
@@ -21,8 +31,9 @@ div.links ul {
     -moz-border-radius: 3px;
     border: 2px solid #999;
     padding: 0.2em;
-    margin: 0.2em;
     list-style-type: none;
+    margin-top: 0px;
+    margin-bottom: 6px;
 }
 
 div.links ul a {
@@ -72,19 +83,37 @@ div.links ul.otherLinks a.notCurrent:hover {
 /* Links - END */
 
 div.my_quizzes {
-    max-width: 700px;
-    background-color: #66f;
-    border: 3px solid #000;
-    font-size: 90%;
-    -moz-border-radius: 7px;
+margin-top: 2em;
+margin-bottom: 2em;
 }
 
-div.quiz {
-    margin: 2px;
-    padding-left: 8px;
+div.quizContainer {
+    max-width: 35em;
+    padding: 0.5em;
+    min-height: 5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
     background-color: #ccf;
-    ;border: 1px solid #448;
-    -moz-border-radius: 5px;
+    border: 2px solid #aac;
+    -moz-border-radius: 3px;
+}
+
+p.quiz {
+    padding-left: 2em;
+}
+p.floatOptions {
+    float: right;
+    text-align: right;
+    margin-right: 2em;
+    font-size: 70%;
+    line-height: 80%;
+}
+
+p.options {
+    text-align: right;
+    margin-right: 2em;
+    font-size: 70%;
+    line-height: 80%;
 }
 
 /* Sign in / Sign out row */
@@ -106,30 +135,14 @@ p.logo img {
     padding: 0.2em;
     background-color: #ccf;
     -moz-border-radius: 5px;
+    border: 2px solid #aac;
 }
 
 /* Logo - END */
 
-;x div.form {
-    padding: 0.5em;
-    background-color: #33aa88;
-    border: 3px solid #000;
-    -moz-border-radius: 3px;
-    display: inline;
-}
-
-;x p.prompt {
-    display: inline;
-    margin-right: 0.5em;
-}
-
-span.input {
-}
-
-
 label
 {
-width: 5em;
+width: 7em;
 float: left;
 text-align: right;
 margin-right: 1.5em;
@@ -138,12 +151,9 @@ display: block
 
 p.submit {
     text-align: right;
-    margin-right: 2.5em;
+    margin-right: 0.2em;
 }
 
-.submit input
-{
-}
 input
 {
 background-color: #ccf;

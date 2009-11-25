@@ -129,7 +129,24 @@ class MyQuizList(webapp.RequestHandler):
         users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
         users_quizzes_count = users_quizzes.count()
         body_template_values['quiz_list_size'] = str(users_quizzes_count)
-
+        
+        quiz_list = ""
+        up_to = 0
+        out_of = users_quizzes_count
+        for quiz in users_quizzes:
+            up_to += 1
+            quiz_list += '<div class="quizContainer">'
+            quiz_list += '<p class="floatOptions"><a href="/quiz/modify/' + str(quiz.key()) + '">modify</a></p>'
+            quiz_list += '<p class="titile"><strong>' + quiz.title + '</strong></p>'
+            quiz_list += '<p class="quiz">'
+            quiz_list += '<ul>'
+            quiz_list += '<li>Category: ' + quiz.category + '</li>'
+            quiz_list += '</ul>'
+            quiz_list += '</p>'
+            quiz_list += '<p class="options"><em>' + str(up_to)  + '/' + str(out_of) + '</em></p>'
+            quiz_list += '</div>'
+        
+        body_template_values['quiz_list'] = quiz_list
         template_values['body'] = template.render(body_path, body_template_values)
 
         main_path = os.path.join(path, 'index.html')
@@ -289,62 +306,12 @@ class AddQuestionPost(webapp.RequestHandler):
 
         self.redirect('/quiz/modify/' + str(quiz_key))
 
-class CreateQuiz(webapp.RequestHandler):
-    @login_required
-    def get(self):
-        user = users.get_current_user()
-       
-
-        self.response.out.write("""
-            <html><head>
-            <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-            </head><body>
-        """)
-        self.response.out.write('<p>Hello, ' + user.nickname() + '</p>')
-        # Write the quiz creation form
-        # TODO Make the select use the const vales...
-        self.response.out.write("""
-                <form action="/post/quiz/create_quiz" method="post">
-                    <table class="form">
-                        <tr>
-                            <td>
-                                <p class="prompt">Title:</p>
-                            </td>
-                            <td>
-                                <input type="text" name="title" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="prompt">Category:</p>
-                            </td>
-                            <td>
-                                <select name="category">
-                                    <option value="history">History</option>
-                                    <option value="maths">Mathematics</option>
-                                    <option value="media">Media (Music, TV, etc.)</option>
-                                    <option value="sci_tech">Science/Tech</option>
-                                    <option value="youtube">YouTube</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <input type="submit" value="Create Quiz" />
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </body>
-        </html>
-        """)
 
 application = webapp.WSGIApplication( 
                                     [
                                         ('/', HomePage), 
                                         ('/my/profile', MyProfile),
                                         ('/my/quiz_list', MyQuizList),
-                                        ('/quiz/create_quiz', CreateQuiz),
                                         ('/quiz/profile/[^\/]+', ProfileQuiz),
                                         ('/user/profile/[^\/]+', ProfileUser),
                                         ('/post/quiz/create_quiz', CreateQuizPost),

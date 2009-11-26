@@ -15,18 +15,18 @@ f = open('constants.yaml')
 const = yaml.load(f)
 f.close()
 
-class BasicQuiz(db.Model):
+class Quiz(db.Model):
     author = db.UserProperty()
 
     title = db.StringProperty()
-    description = db.StringProperty()
     category = db.StringProperty()
+    description = db.StringProperty()
     questions = db.ListProperty(db.Key)
 
     date = db.DateTimeProperty(auto_now_add=True)
 
     def print_me (self):
-        return_string = '<h4>' + self.title + '</h4>' + '<p>Description: ' + self.description + '</p>' + '<p>Category: ' + self.category + '</p>'
+        return_string = '<h4>' + self.title + '</h4>' + '<p>Category: ' + self.category + '</p>' + '<p>Description: ' + self.description + '</p>'
         return_string = return_string + '<ul class="questions">'        
         for q_key in self.questions:
             question = Question.get(q_key)
@@ -93,7 +93,8 @@ class MyProfile(webapp.RequestHandler):
         body_path = os.path.join(path, 'my_profile.html')
         
         body_template_values = {}        
-        users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
+        users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY date", user)
+
         users_quizzes_count = users_quizzes.count()
         body_template_values['quiz_list_size'] = str(users_quizzes_count)
 
@@ -127,7 +128,7 @@ class MyQuizList(webapp.RequestHandler):
         body_path = os.path.join(path, 'my_quiz_list.html')
         
         body_template_values = {}
-        users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
+        users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY date", user)
         users_quizzes_count = users_quizzes.count()
         body_template_values['quiz_list_size'] = str(users_quizzes_count)
         
@@ -139,13 +140,13 @@ class MyQuizList(webapp.RequestHandler):
             quiz_list += '<div class="quizContainer">'
             quiz_list += '<p class="floatOptions"><a href="/quiz/modify/' + str(quiz.key()) + '">modify</a></p>'
             quiz_list += '<p class="titile"><strong>' + quiz.title + '</strong></p>'
-            quiz_list += '<p class="floatOptions"><em>' + str(up_to)  + '/' + str(out_of) + '</em></p>'
             quiz_list += '<p class="description">' + quiz.description + '</p>'
-#            quiz_list += '<p class="quiz">'
-#            quiz_list += '<ul>'
-#            quiz_list += '<li>Category: ' + quiz.category + '</li>'
-#            quiz_list += '</ul>'
-#            quiz_list += '</p>'
+            quiz_list += '<p class="quiz">'
+            quiz_list += '<ul>'
+            quiz_list += '<li>Category: ' + quiz.category + '</li>'
+            quiz_list += '</ul>'
+            quiz_list += '</p>'
+            quiz_list += '<p class="options"><em>' + str(up_to)  + '/' + str(out_of) + '</em></p>'
             quiz_list += '</div>'
         
         body_template_values['quiz_list'] = quiz_list
@@ -192,7 +193,7 @@ class ModifyQuiz(webapp.RequestHandler):
         quiz = None
         # Try to load the specified quiz
         try:
-            quiz = BasicQuiz.get(quiz_key)
+            quiz = Quiz.get(quiz_key)
         except:
         # Failed to load the quiz
             template_values['body'] = '<p class="error">Bad Quiz Key. Failed to load quiz</p>'
@@ -235,7 +236,7 @@ class ProfileUser(webapp.RequestHandler):
         if user == None or user.nickname() != target_user_name:
             self.response.out.write('<html><body><p>User: ' + target_user_name + '</p></body></html>')
         else:
-            users_quizzes = BasicQuiz.gql("WHERE author = :1 ORDER BY date", user)
+            users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY date", user)
             self.response.out.write("""
                 <html>
                     <head<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" /></head>
@@ -249,6 +250,7 @@ class ProfileUser(webapp.RequestHandler):
             for quiz in users_quizzes:
                 self.response.out.write('<div class="quiz">')
                 self.response.out.write('<h4><strong>' + quiz.title + '</strong></h4>')
+                self.response.out.write('<p class="description">' + quiz.description + '</p>')
                 self.response.out.write('<ul>')
                 self.response.out.write('<li>Category: ' + quiz.category + '</li>')
                 self.response.out.write('</ul>')
@@ -266,27 +268,28 @@ class TextQuizList(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
         # TODO Fix magic number
-        basic_quizzes = db.GqlQuery("SELECT * FROM BasicQuiz ORDER BY date") # DESC LIMIT 999")
+        quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY date") # DESC LIMIT 999")
 
-        for b_quiz in basic_quizzes:
-            self.response.out.write(b_quiz.title + ':\n') 
+        for quiz in quizzes:
+            self.response.out.write(quiz.title + ':\n') 
             self.response.out.write(
-                '\tcreation_date: ' + str(b_quiz.date) + '\n'
+                '\tcreation_date: ' + str(quiz.date) + '\n'
             ) 
+            self.response.out.write('\tdescription: ' + quiz.description + '\n')
 #            self.response.out.write('\tauthor: ' + b_quiz.author.nickname() + '\n'
-            self.response.out.write('\tcategory: ' + b_quiz.category + '\n')
+            self.response.out.write('\tcategory: ' + quiz.category + '\n')
 
 class CreateQuizPost(webapp.RequestHandler):
     def post(self):
-        b_quiz = BasicQuiz()
+        quiz = Quiz()
 
-        b_quiz.author = users.get_current_user()
+        quiz.author = users.get_current_user()
         
-        b_quiz.title = self.request.get('title')
-        b_quiz.description = self.request.get('description')
-        b_quiz.category = self.request.get('category')
+        quiz.title = self.request.get('title')
+        quiz.description = self.request.get('description')
+        quiz.category = self.request.get('category')
         
-        b_quiz.put()
+        quiz.put()
         
         self.redirect('/quiz/modify/' + str(b_quiz.key()))
 
@@ -304,7 +307,7 @@ class AddQuestionPost(webapp.RequestHandler):
         quiz = None
         # Try to load the specified quiz
         try:
-            quiz = BasicQuiz.get(quiz_key)
+            quiz = Quiz.get(quiz_key)
         except:
             # TODO: Redirect with error
             path = os.path.join(os.path.dirname(__file__), 'templates')

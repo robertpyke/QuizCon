@@ -102,15 +102,18 @@ margin-bottom: 2em;
 div.quizContainer {
     max-width: 35em;
     padding: 0.5em;
-    min-height: 5em;
+    min-height: 4.5em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     background-color: #ccf;
     border: 2px solid #aac;
     -moz-border-radius: 3px;
 }
+div.quizContaiiner p.description {
+    padding-left: 2em;
+}
 
-p.quiz {
+div.quizContainer p.quiz {
     padding-left: 2em;
 }
 p.floatOptions {

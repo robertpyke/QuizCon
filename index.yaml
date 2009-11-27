@@ -10,7 +10,13 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-- kind: BasicQuiz
+- kind: Quiz
   properties:
   - name: author
   - name: date
+
+- kind: Quiz
+  properties:
+  - name: author
+  - name: date
+    direction: desc

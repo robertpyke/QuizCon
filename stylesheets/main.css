@@ -8,6 +8,10 @@ div.body ul li:before {
     content: "\2192 \0020";
 }
 
+div.body ul li.category:before {
+    content: "\2392 \0020";
+}
+
 div.wrapper {
 
     margin: 0 auto; /* Center align for Good browsers like Firefox, Opera, Netscape */
@@ -155,7 +159,7 @@ p.logo img {
 
 label
 {
-width: 7em;
+width: 8em;
 float: left;
 text-align: right;
 margin-right: 1.5em;
@@ -167,22 +171,23 @@ p.submit {
     margin-right: 0.2em;
 }
 
-input
+p.prompt input
 {
 background-color: #ccf;
-border: 1px solid #781351
+border: 1px solid #781351;
+min-width: 20em;
 }
 
 .submit input
 {
 color: #fff;
 background-color: #56f;
-border: 2px outset #d7b9c9
+border: 2px outset #d7b9c9;
 }
 fieldset
 {
 border: 1px solid #781351;
-width: 20em
+width: 30em
 }
 
 legend

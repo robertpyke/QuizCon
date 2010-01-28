@@ -3,15 +3,15 @@
 <form action="/post/quiz/add_question" method="post">
 <div class="form">
     <input type="hidden" name="quiz_key" value="{{ quiz_key }}"/>
-        <fieldset>
+        <fieldset class="modifyQuiz">
         <legend>Add a question?</legend>
         <p class="prompt">
             <label for="prompt">Prompt:</label>
             <input type="text" name="prompt"/>
         </p>
         <p class="prompt">
-            <label for="answer">Answer: </label>
-            <input type="text" name="answer"/>
+            <label for="solution">Solution: </label>
+            <input type="text" name="solution"/>
         </p>
         <p class="submit">
             <input type="submit" value="Add Question"/>

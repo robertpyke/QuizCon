@@ -134,7 +134,7 @@ p.options {
 }
 
 /* Sign in / Sign out row */
-div.user {
+div.log {
     text-align: right;
     font-size: 70%;
 }
@@ -156,33 +156,33 @@ p.logo img {
 }
 
 /* Logo - END */
-;x div.question {
-;x     margin-top: 0.5em;
-;x     margin-bottom: 0.5em;
-;x     min-width: 38em;
-;x }
+div.question {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    min-width: 40em;
+}
 
 label
 {
-    min-width: 8em;
-    margin-left: 2em;
-    margin-bottom: 1em;
-    display: block;
+    width: 8em;
+    text-align: right;
+    margin-right: 1.5em;
+    margin-left: 3em;
 }
 
 p.submit {
-    margin-left: 15em;
+    margin-left: 9em;
     text-align: right;
     margin-right: 2em;
 }
 
-p.prompt input, p.prompt select
+p.prompt input
 {
 background-color: #ccf;
 border: 1px solid #781351;
-width: 25em;
+min-width: 20em;
+float: right;
 margin-right: 2em;
-margin-left: 10em;
 }
 
 .submit input
@@ -194,8 +194,7 @@ border: 2px outset #d7b9c9;
 fieldset
 {
 border: 1px solid #781351;
-min-width: 42em;
-margin: 0.5em;
+min-width: 30em;
 }
 
 legend

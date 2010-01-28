@@ -9,65 +9,28 @@ from google.appengine.ext.webapp.util import login_required
 
 import yaml
 
+import models
+from models import *
+
 # Author: Robert Pyke
 
 f = open('constants.yaml')
 const = yaml.load(f)
 f.close()
 
+f = open('language.yaml')
+dict = yaml.load(f)
+f.close
+
+# Default language
+# Language choices:
+#   :pirate
+#   :english
+#   :lolcat
+language = 'lolcat'
+
 path = os.path.join(os.path.dirname(__file__), 'templates')
 
-# Quiz Model
-class Quiz(db.Model):
-    author = db.UserProperty()
-
-    title = db.StringProperty()
-    description = db.StringProperty()
-    category = db.StringProperty()
-    questions = db.ListProperty(db.Key)
-    scores = db.ListProperty(db.Key)
-
-    date = db.DateTimeProperty(auto_now_add=True)
-
-    def print_me (self):
-        return_string = '<h4>' + self.title + '</h4>' + '<p>Description: ' + self.description + '</p>' + '<p>Category: ' + self.category + '</p>'
-        return_string += '<p class="question_count">Questions: ' + str(len(self.questions)) + '</p>'
-        return_string += '<ul class="questions">'        
-        for q_key in self.questions:
-            question = Question.get(q_key)
-            return_string += '<li class="question">' + question.prompt + '</li>'
-
-        return_string = return_string + '</ul>'
-        return return_string
-    
-    def print_take_quiz (self):
-        return_string = '<form action="/post/quiz/take" method="post">'
-        return_string += '<div class="form">'
-        return_string += '<input type="hidden" name="quiz_key" value="' + str(self.key()) + '"/>'
-        return_string += '<fieldset>'
-        return_string += '<legend>' +  self.title + '</legend>'
-        return_string += '<p class="description">Description: ' + self.description + '</p>' + '<p class="category">Category: ' + self.category + '</p>'
-        
-        for q_key in self.questions:
-            question = Question.get(q_key)
-            return_string += '<p class="prompt">' 
-            return_string += '<label for="' + str(q_key) + '">' + question.prompt + ':</label>'
-            return_string += '<input type="text" name="' + str(q_key) + '"/>'
-            return_string += '</p>'            
-
-        return_string += '<p class="submit"><input type="submit" value="Submit Answers"/></p>'
-        return_string += '</fieldset></div></form>'
-        
-        return return_string
-
-class Question(db.Model):
-    prompt = db.StringProperty()
-    answer = db.StringProperty()
-
-class Score(db.Model):
-    user = db.Key
-    correct = db.IntegerProperty()
-    incorrect = db.IntegerProperty()
 
 # Get / (index) handler
 class HomePage(webapp.RequestHandler):
@@ -77,13 +40,15 @@ class HomePage(webapp.RequestHandler):
         template_values = {}
         template_values['base_uri'] = const['base_uri']
         if user:
-            template_values['log_text'] = "Sign out"
-            template_values['log_link'] = users.create_logout_url(const['base_uri'])
+            template_values['user_text'] = dict['log_out'][language]
+            template_values['user_link'] = users.create_logout_url(const['base_uri'])
             template_values['nickname'] = user.nickname()
-            template_values['body'] = ('<p>Welcome ' + user.nickname() + '</p>')
+            template_values['body'] = ('<p>' + dict['welcome'][language] + ' ' + user.nickname() + '</p>')
         else:
-            template_values['log_text'] = "Sign in"
-            template_values['log_link'] = users.create_login_url(self.request.uri)
+            template_values['user_text'] = dict['log_in'][language]
+            template_values['user_link'] = users.create_login_url(self.request.uri)
+            template_values['body'] = ('<p><strong>' + dict['welcome_message'][language] + '</strong></p>')
+            
 
         links_path = os.path.join(path, 'links.html')
        
@@ -104,8 +69,8 @@ class MyProfile(webapp.RequestHandler):
         user = users.get_current_user()
         template_values = {}
         template_values['base_uri'] = const['base_uri']
-        template_values['log_text'] = "Sign out"
-        template_values['log_link'] = users.create_logout_url(const['base_uri'])
+        template_values['user_text'] = dict['log_out'][language]
+        template_values['user_link'] = users.create_logout_url(const['base_uri'])
         template_values['nickname'] = user.nickname()
         
         
@@ -121,7 +86,7 @@ class MyProfile(webapp.RequestHandler):
         body_path = os.path.join(path, 'my_profile.html')
         
         body_template_values = {}        
-        users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY date DESC", user)
+        users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY creation_date DESC", user)
         users_quizzes_count = users_quizzes.count()
         body_template_values['quiz_list_size'] = str(users_quizzes_count)
 
@@ -137,8 +102,8 @@ class MyQuizList(webapp.RequestHandler):
         user = users.get_current_user()
         template_values = {}
         template_values['base_uri'] = const['base_uri']
-        template_values['log_text'] = "Sign out"
-        template_values['log_link'] = users.create_logout_url(const['base_uri'])
+        template_values['user_text'] = dict['log_out'][language]
+        template_values['user_link'] = users.create_logout_url(const['base_uri'])
         template_values['nickname'] = user.nickname()
         
         
@@ -154,7 +119,7 @@ class MyQuizList(webapp.RequestHandler):
         body_path = os.path.join(path, 'my_quiz_list.html')
         
         body_template_values = {}
-        users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY date DESC", user)
+        users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY creation_date DESC", user)
         users_quizzes_count = users_quizzes.count()
         body_template_values['quiz_list_size'] = str(users_quizzes_count)
         
@@ -202,13 +167,13 @@ class PublicQuizList(webapp.RequestHandler):
         template_values = {}
         template_values['base_uri'] = const['base_uri']
         if user:
-            template_values['log_text'] = "Sign out"
-            template_values['log_link'] = users.create_logout_url(const['base_uri'])
+            template_values['user_text'] = dict['log_out'][language]
+            template_values['user_link'] = users.create_logout_url(const['base_uri'])
             template_values['nickname'] = user.nickname()
             template_values['body'] = ('<p>Welcome ' + user.nickname() + '</p>')
         else:
-            template_values['log_text'] = "Sign in"
-            template_values['log_link'] = users.create_login_url(self.request.uri)
+            template_values['user_text'] = dict['log_in'][language]
+            template_values['user_link'] = users.create_login_url(self.request.uri)
 
         links_path = os.path.join(path, 'links.html')
         
@@ -222,11 +187,11 @@ class PublicQuizList(webapp.RequestHandler):
         body_path = os.path.join(path, 'quiz_quiz_list.html')
         
         body_template_values = {}
-        total_quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY date DESC")
+        total_quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY creation_date DESC")
         out_of = total_quizzes.count()
 
         up_to = 0 + ( ( page * 10 ) - 10 )        
-        quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY date DESC LIMIT " + str(items_per_page) + " OFFSET " + str(up_to))
+        quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY creation_date DESC LIMIT " + str(items_per_page) + " OFFSET " + str(up_to))
 
         body_template_values['quiz_list_size'] = str(out_of)
         body_template_values['page'] = str(page)
@@ -288,8 +253,8 @@ class ModifyQuiz(webapp.RequestHandler):
         
         template_values = {}
         template_values['base_uri'] = const['base_uri']
-        template_values['log_text'] = "Sign out"
-        template_values['log_link'] = users.create_logout_url(const['base_uri'])
+        template_values['user_text'] = dict['log_out'][language]
+        template_values['user_link'] = users.create_logout_url(const['base_uri'])
         template_values['nickname'] = user.nickname()
         
         
@@ -349,7 +314,7 @@ class ProfileUser(webapp.RequestHandler):
         if user == None or user.nickname() != target_user_name:
             self.response.out.write('<html><body><p>User: ' + target_user_name + '</p></body></html>')
         else:
-            users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY date DESC", user)
+            users_quizzes = Quiz.gql("WHERE author = :1 ORDER BY creation_date DESC", user)
             self.response.out.write("""
                 <html>
                     <head<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" /></head>
@@ -380,12 +345,12 @@ class TextQuizList(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
         # TODO Fix magic number
-        basic_quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY date DESC") # DESC LIMIT 999")
+        basic_quizzes = db.GqlQuery("SELECT * FROM Quiz ORDER BY creation_date DESC") # DESC LIMIT 999")
 
         for b_quiz in basic_quizzes:
             self.response.out.write(b_quiz.title + ':\n') 
             self.response.out.write(
-                '\tcreation_date: ' + str(b_quiz.date) + '\n'
+                '\tcreation_date: ' + str(b_quiz.creation_date) + '\n'
             ) 
 #            self.response.out.write('\tauthor: ' + b_quiz.author.nickname() + '\n'
             self.response.out.write('\tcategory: ' + b_quiz.category + '\n')
@@ -418,7 +383,7 @@ class TakeQuizPost(webapp.RequestHandler):
         for q_key in quiz.questions:
             question = Question.get(q_key)
             answer = self.request.get(str(question.key()))
-            if answer == question.answer:
+            if answer == question.solution:
                 correct += 1
             else:
                 incorrect += 1
@@ -452,13 +417,13 @@ class QuizResult(webapp.RequestHandler):
         template_values = {}
         template_values['base_uri'] = const['base_uri']
         if user:
-            template_values['log_text'] = "Sign out"
-            template_values['log_link'] = users.create_logout_url(const['base_uri'])
+            template_values['user_text'] = dict['log_out'][language]
+            template_values['user_link'] = users.create_logout_url(const['base_uri'])
             template_values['nickname'] = user.nickname()
             template_values['body'] = ('<p>Welcome ' + user.nickname() + '</p>')
         else:
-            template_values['log_text'] = "Sign in"
-            template_values['log_link'] = users.create_login_url(self.request.uri)
+            template_values['user_text'] = dict['log_in'][language]
+            template_values['user_link'] = users.create_login_url(self.request.uri)
 
         links_path = os.path.join(path, 'links.html')
        
@@ -524,7 +489,7 @@ class AddQuestionPost(webapp.RequestHandler):
         quiz_key = self.request.get('quiz_key')
 
         question.prompt = self.request.get('prompt')
-        question.answer = self.request.get('answer')
+        question.solution = self.request.get('solution')
 
         question.put()
         
@@ -618,8 +583,8 @@ class TakeQuiz(webapp.RequestHandler):
         
         template_values = {}
         template_values['base_uri'] = const['base_uri']
-        template_values['log_text'] = "Sign out"
-        template_values['log_link'] = users.create_logout_url(const['base_uri'])
+        template_values['user_text'] = dict['log_out'][language]
+        template_values['user_link'] = users.create_logout_url(const['base_uri'])
         template_values['nickname'] = user.nickname()
         
         

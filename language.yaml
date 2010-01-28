@@ -1,0 +1,17 @@
+welcome:
+    english: "Welcome"
+    pirate: "Here be"
+    lolcat: "Helo"
+welcome_message: 
+    english: "Under Construction"
+    lolcat: "Under Construction"
+    pirate: "The site be under construction, yah!"
+log_in:
+    english: "Log in?"
+    pirate: "Give me the gold deblogin!"
+    lolcat: "I can haz login?"
+log_out:
+    english: "Log out"
+    pirate: "Arggh, I be wanting out of here!"
+    lolcat: "KTHXBYE"
+

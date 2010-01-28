@@ -5,7 +5,7 @@ from google.appengine.ext import db
 class Quiz(db.Model):
     title = db.StringProperty()
     description = db.StringProperty()
-    category = db.StringProperty()
+    tags = db.StringListProperty()
     questions = db.ListProperty(db.Key)
     author = db.UserProperty()
     creation_date = db.DateTimeProperty(auto_now_add=True)
@@ -15,7 +15,12 @@ class Quiz(db.Model):
     private_viewers = db.StringListProperty()
 
     def print_me (self):
-        return_string = '<h4>' + self.title + '</h4>' + '<p>Description: ' + self.description + '</p>' + '<p>Category: ' + self.category + '</p>'
+        return_string = '<h4>' + self.title + '</h4>' + '<p>Description: ' + self.description + '</p>' + '<p>Tags: </p>'
+        return_string = '<ul>'
+        for tag in self.tags:        
+            return_string = '<li>' + tag + '</li>'
+        return_string = '</ul>'
+
         return_string += '<p class="question_count">Questions: ' + str(len(self.questions)) + '</p>'
         return_string += '<ul class="questions">'        
         for q_key in self.questions:
@@ -31,17 +36,25 @@ class Quiz(db.Model):
         return_string += '<input type="hidden" name="quiz_key" value="' + str(self.key()) + '"/>'
         return_string += '<fieldset class="takeQuiz">'
         return_string += '<legend>' +  self.title + '</legend>'
-        return_string += '<p class="description">Description: ' + self.description + '</p>' + '<p class="category">Category: ' + self.category + '</p>'
+        return_string += '<p class="description">Description: ' + self.description + '</p>' + '<p class="tags">tags: '
+
+        for tag in self.tags:
+            return_string += tag + ' '
+        return_string += '</p>'
         
         for q_key in self.questions:
             question = Question.get(q_key)
-            return_string += '<div class="question">'
-            return_string += '<p class="prompt">' 
-            return_string += '<label for="' + str(q_key) + '">' + question.prompt + ':</label>'
-            return_string += '<input type="text" name="' + str(q_key) + '"/>'
-            return_string += '</p>'            
-            return_string += '</div>'
-
+            if question:            
+                return_string += '<div class="question">'
+                return_string += '<p class="prompt">' 
+                return_string += '<label for="' + str(q_key) + '">' + question.prompt + ':</label>'
+                return_string += '<input type="text" name="' + str(q_key) + '"/>'
+                return_string += '</p>'            
+                return_string += '</div>'
+            else:
+                error_msg = "This is most unfortunate. A question (key: " + str(q_key) + ") was referenced, but is missing from the database."
+                raise Exception, error_msg
+            
         return_string += '<p class="submit"><input type="submit" value="Submit Answers"/></p>'
         return_string += '</fieldset></div></form>'
         

@@ -24,9 +24,9 @@ f.close
 
 # Default language
 # Language choices:
-#   :pirate
-#   :english
-#   :lolcat
+#    pirate
+#    english
+#    lolcat
 language = 'lolcat'
 
 path = os.path.join(os.path.dirname(__file__), 'templates')
@@ -134,7 +134,7 @@ class MyQuizList(webapp.RequestHandler):
                 quiz_list += ', <a href="/quiz/take/' + str(quiz.key()) + '">take quiz</a>'
             
             quiz_list += ' <em>' + str(up_to) + '/' + str(out_of) +  '</em></p>'
-            quiz_list += '<p class="titile"><strong>' + quiz.title + '</strong></p>'
+            quiz_list += '<p class="title"><strong>' + quiz.title + '</strong></p>'
             quiz_list += '<p class="description">' + quiz.description + '</p>'
             
             quiz_list += '<form action="/post/quiz/remove" method="post">'
@@ -206,12 +206,16 @@ class PublicQuizList(webapp.RequestHandler):
                 quiz_list += '<a href="/quiz/take/' + str(quiz.key()) + '">take quiz</a>'
             quiz_list += ' <em>' + str(up_to) + '/' + str(out_of) +  '</em></p>'
             quiz_list += '</p>'
-            quiz_list += '<p class="titile"><strong>' + quiz.title + '</strong></p>'
+            quiz_list += '<p class="title"><strong>' + quiz.title + '</strong></p>'
             quiz_list += '<p class="description">' + quiz.description + '</p>'
             quiz_list += '<p class="question_count">Questions: ' + str(len(quiz.questions)) + '</p>'
             quiz_list += '<p class="quiz">'
             quiz_list += '<ul>'
-            quiz_list += '<li class="category">Category: ' + quiz.category + '</li>'
+            quiz_list += '<li class="tags">Tags: '
+            for tag in quiz.tags:
+                quiz_list += tag + ' '
+            quiz_list += '</li>'
+            
             quiz_list += '</ul>'
             quiz_list += '</p>'
             quiz_list += '</div>'
@@ -329,7 +333,10 @@ class ProfileUser(webapp.RequestHandler):
                 self.response.out.write('<div class="quiz">')
                 self.response.out.write('<h4><strong>' + quiz.title + '</strong></h4>')
                 self.response.out.write('<ul>')
-                self.response.out.write('<li>Category: ' + quiz.category + '</li>')
+                self.response.out.write('<li class="tags">Tags: ')
+                for tag in quiz.tags:
+                    self.response.out.write(tag + ' ')
+                self.response.out.write('</li>')
                 self.response.out.write('</ul>')
                 self.response.out.write('<p><a href="/quiz/modify/' + str(quiz.key()) + '">Modify?</a></p>')
                 self.response.out.write('</div>')
@@ -353,7 +360,11 @@ class TextQuizList(webapp.RequestHandler):
                 '\tcreation_date: ' + str(b_quiz.creation_date) + '\n'
             ) 
 #            self.response.out.write('\tauthor: ' + b_quiz.author.nickname() + '\n'
-            self.response.out.write('\tcategory: ' + b_quiz.category + '\n')
+            self.response.out.write('\ttags: ')
+            for tag in b_quiz.tags:
+                self.response.out.write(tag + ' ')
+            self.response.out.write('\n')
+            
 
 class TakeQuizPost(webapp.RequestHandler):
     def post(self):
@@ -474,7 +485,12 @@ class CreateQuizPost(webapp.RequestHandler):
         
         b_quiz.title = self.request.get('title')
         b_quiz.description = self.request.get('description')
-        b_quiz.category = self.request.get('category')
+        tags_string = self.request.get('tags')
+        tags = tags_string.split(',')
+        for tag in tags:
+            tag_stripped = tag.strip()
+            if tag != '':
+                b_quiz.tags.append(tag_stripped) 
         
         b_quiz.put()
         
